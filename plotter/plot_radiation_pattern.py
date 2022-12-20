@@ -5,7 +5,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-import coordinate_utils
+import utils
 
 def plot2d(arrayPattern, poleAngles, azimuthAngles):
     arrayPatternLog = 10*np.log10(np.abs((arrayPattern)**2))
@@ -32,7 +32,7 @@ def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40)
         arrayPatternLog[arrayPatternLog<0] = 0
         
         iMesh, jMesh = np.meshgrid(poleAngles, azimuthAngles, indexing='ij')
-        arrayPatternCoord = coordinate_utils.spherical_to_cartesian(arrayPatternLog, 
+        arrayPatternCoord = utils.spherical_to_cartesian(arrayPatternLog, 
                                                                     iMesh, jMesh)
         R = arrayPatternLog
         

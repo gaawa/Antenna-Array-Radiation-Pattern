@@ -4,13 +4,13 @@ Created on Tue Dec 20 15:19:42 2022
 
 @author: ThinkWin
 """
-from main import array_processing
-from ArrayGenerator import LinearArray, CircularArray, LinearCircularArray, BowCircularArray
+from array_processing import array_processing
+from antenna_array import LinearArray, CircularArray, LinearCircularArray, BowCircularArray
 from enumerations import PlotMode, BeamFormer
 import scipy.constants as spc
 import numpy as np
-from OmnidirectionalAntennaElement import OmnidirectionalAntennaElement
-from HalfdirectionalAntennaElement import HalfdirectionalAntennaElement
+from antenna_element.omnidirectional import OmnidirectionalAntennaElement
+from antenna_element.halfdirectional import HalfdirectionalAntennaElement
 
 ## set physical constants
 freq = 3e9

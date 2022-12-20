@@ -1,5 +1,5 @@
 import numpy as np
-import coordinate_utils
+import utils
 from utils import get_radius_of_equal_distance, spherical_to_cartesian
 
 class LinearArray():
@@ -22,7 +22,7 @@ class LinearArray():
     def generateArray(self):
         arrayElements = []
         
-        # thetaOrientVec = coordinate_utils.spherical_to_cartesian(1, np.pi/4, np.pi/4)
+        # thetaOrientVec = utils.spherical_to_cartesian(1, np.pi/4, np.pi/4)
         thetaOrientVec = np.array([0, 0, 1])
         phiOrientVec = np.array([1, 0, 0])
         for n in range(self.numElements):
@@ -106,8 +106,8 @@ class LinearCircularArray():
                 zPos = linearElementCenteredPositions[m]
                 positionVector = np.array([xPos, yPos, zPos])
                 # elements are facing outwards
-                thetaOrientVec = coordinate_utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth)
-                phiOrientVec = coordinate_utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth+np.pi/2)
+                thetaOrientVec = utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth)
+                phiOrientVec = utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth+np.pi/2)
                 arrayElements.append(self.AntennaElementClass(positionVector, thetaOrientVec, phiOrientVec))
                 
         return arrayElements  
@@ -162,10 +162,10 @@ class BowCircularArray():
             for m in range(self.numBowElements):
                 refPosVec = np.array([[xPosVec[m]], [0], [zPosVec[m]]])
                 rotPosVec = np.squeeze(np.matmul(rotMatZ, refPosVec))
-                thetaOrientVec = coordinate_utils.spherical_to_cartesian(1, 
+                thetaOrientVec = utils.spherical_to_cartesian(1, 
                                                                          elementPoleAngles[m], 
                                                                          elementAzimuth)
-                phiOrientVec = coordinate_utils.spherical_to_cartesian(1, 
+                phiOrientVec = utils.spherical_to_cartesian(1, 
                                                                        np.pi/2, 
                                                                        elementAzimuth+np.pi/2)
                 arrayElements.append(self.AntennaElementClass(rotPosVec, thetaOrientVec, phiOrientVec))

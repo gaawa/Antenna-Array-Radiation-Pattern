@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 # plot antenna positions
-def plotDots(antennaArray):
+def plot_dots(antennaArray):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     for antennaElement in antennaArray:
@@ -13,7 +13,7 @@ def plotDots(antennaArray):
         ax.scatter(xPos, yPos, zPos, marker='o', color='b')
     plt.show()
     
-def plotQuiver(antennaArray, ax_size=0.5, arrow_size=1):
+def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     

@@ -1,12 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from ArrayGenerator import LinearArray, CircularArray, LinearCircularArray, BowCircularArray
-from enumerations import ArrayFormation, PlotMode, BeamFormer
+from enumerations import PlotMode, BeamFormer
 import numpy as np
-import equidist_pts_sphere
-import coordinate_utils
-import plot_radiation_pattern
-import plot_antenna_topology
+from plotter import plot_radiation_pattern
+from plotter import plot_antenna_topology
+from utils import spherical_to_cartesian
 
 def plot2d_generic(R, poleAngles, azimuthAngles):
     iMesh, jMesh = np.meshgrid(poleAngles, azimuthAngles, indexing='ij')
@@ -20,7 +18,7 @@ def plot2d_generic(R, poleAngles, azimuthAngles):
     plt.show()
     
 
-def calculateRadiationPattern(antennaArray, w, poleAngles, azimuthAngles,
+def calculate_radiation_pattern(antennaArray, w, poleAngles, azimuthAngles,
                               wavenumber):
     poleResolution = poleAngles.size
     azimuthResolution = azimuthAngles.size
@@ -33,7 +31,7 @@ def calculateRadiationPattern(antennaArray, w, poleAngles, azimuthAngles,
                                                  for phi in azimuthAngles]).T
     thetaVec = spherical_param_mat[0,:][:]
     phiVec = spherical_param_mat[1,:][:]
-    dv_matrix = coordinate_utils.spherical_to_cartesian(1, thetaVec, phiVec)
+    dv_matrix = spherical_to_cartesian(1, thetaVec, phiVec)
 
     # create list of antenna position vectors from all elements
     pv_list = [ antennaElement.positionVector for antennaElement in antennaArray ]
@@ -44,7 +42,7 @@ def calculateRadiationPattern(antennaArray, w, poleAngles, azimuthAngles,
     L_matrix = pv_matrix.T @ dv_matrix
 
     # get antenna element factor
-    G_ant = [ antennaElement.getElementFactorArrayBasis(dv_matrix)
+    G_ant = [ antennaElement.get_element_factor_array_basis(dv_matrix)
                  for antennaElement in antennaArray]
     G_ant = np.array(G_ant)
     # plot2d_generic(G_ant[0,:].reshape((poleResolution, azimuthResolution)), poleAngles, azimuthAngles)
@@ -69,7 +67,7 @@ def array_processing(antennaArray, wavenumber,
     arrayElements = antennaArray.arrayElements
     ## plot antenna positions
     # plot_antenna_topology.plotDots(antennaArray)
-    plot_antenna_topology.plotQuiver(arrayElements, 
+    plot_antenna_topology.plot_quiver(arrayElements, 
                                      ax_size=antennaArray.ax_size, 
                                      arrow_size=antennaArray.arrow_size)
     
@@ -78,7 +76,7 @@ def array_processing(antennaArray, wavenumber,
         w = np.ones((len(arrayElements),1))
     elif beamformer is BeamFormer.Projection:
         # create cartesian direction vector in the direction of desired beam steering
-        dv = coordinate_utils.spherical_to_cartesian(1, 
+        dv = spherical_to_cartesian(1, 
                                                      beamformerTheta, 
                                                      beamformerPhi).reshape(-1,1)
     
@@ -96,7 +94,7 @@ def array_processing(antennaArray, wavenumber,
     ## calculate radiation pattern
     poleAngles = np.array(range(poleResolution))/(poleResolution-1)*plotThetaRange
     azimuthAngles = np.array(range(azimuthResolution))/(azimuthResolution-1)*plotPhiRange
-    arrayPattern = calculateRadiationPattern(arrayElements, w, poleAngles, azimuthAngles,
+    arrayPattern = calculate_radiation_pattern(arrayElements, w, poleAngles, azimuthAngles,
                                              wavenumber)
     
     if plotMode is PlotMode.plot2d:    

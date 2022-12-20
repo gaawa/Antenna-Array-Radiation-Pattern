@@ -29,7 +29,8 @@ class AntennaElement(ABC):
         super().__init__()
 
     @abstractmethod
-    def getElementFactorElementBasis(self, signalVecLocal):
+    
+    def get_element_factor_element_basis(self, signalVecLocal):
         # the implementation must imply that the input is 2D column vecotors.
         # it must cover the case when the input is 2xN matrix,
         # where the axis 0 is [theta, phi] and axis 1 the multiple different
@@ -38,7 +39,8 @@ class AntennaElement(ABC):
         # direction in the axis 1
         pass
 
-    def getElementFactorArrayBasis(self, signalVecGlobal):
+    
+    def get_element_factor_array_basis(self, signalVecGlobal):
         # convert input to 3x1 column vector or 3xN matrix of column vectors
         signalVecGlobal = signalVecGlobal.reshape(3,-1)
         
@@ -57,5 +59,4 @@ class AntennaElement(ABC):
         
         signalAngLocal = np.array([ theta,
                                     phi ])
-        
-        return self.getElementFactorElementBasis(signalAngLocal)
+        return self.get_element_factor_element_basis(signalAngLocal)
