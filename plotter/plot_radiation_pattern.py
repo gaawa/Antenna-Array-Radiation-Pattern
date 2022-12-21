@@ -8,6 +8,24 @@ import numpy as np
 import utils
 
 def plot2d(arrayPattern, poleAngles, azimuthAngles):
+    """
+    2D surf plot of radiation pattern.
+
+    Parameters
+    ----------
+    arrayPattern : 2D matrix
+        Matrix containing signal amplification correspondig to poleAngles and
+        azimuthAngles.
+    poleAngles : 1D matrix
+        pole angle values.
+    azimuthAngles : 1D matrix
+        azimuth angle values.
+
+    Returns
+    -------
+    None.
+
+    """
     arrayPatternLog = 10*np.log10(np.abs((arrayPattern)**2))
     arrayPatternLog[arrayPatternLog<-30] = np.nan
     
@@ -24,6 +42,31 @@ def plot2d(arrayPattern, poleAngles, azimuthAngles):
     plt.show()
 
 def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40):
+    """
+    3D surf plot of radiation pattern.
+
+    Parameters
+    ----------
+    arrayPattern : 2D matrix
+        Matrix containing signal amplification correspondig to poleAngles and
+        azimuthAngles.
+    poleAngles : 1D matrix
+        pole angle values.
+    azimuthAngles : 1D matrix
+        azimuth angle values.
+    logMode : boolean, optional
+        Values are converted with 20*log10(abs(arrayPattern)) first if True. 
+        The default is True.
+    logRange : floating point, optional
+        The value range from maximum value downto max-logRange that are plotted. 
+        Smaller values are ignored.
+        The default is 40.
+
+    Returns
+    -------
+    None.
+
+    """
     if logMode:
         # set values below the limit of max-logRange to the limit
         arrayPatternLog = 10*np.log10(np.abs((arrayPattern)**2))
@@ -37,6 +80,7 @@ def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40)
         R = arrayPatternLog
         
     else:
+        # TODO: scalar plot
         pass
     
     fig = plt.figure()

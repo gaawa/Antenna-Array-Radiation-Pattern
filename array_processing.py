@@ -6,20 +6,62 @@ from plotter import plot_radiation_pattern
 from plotter import plot_antenna_topology
 from utils import spherical_to_cartesian
 
-def plot2d_generic(R, poleAngles, azimuthAngles):
-    iMesh, jMesh = np.meshgrid(poleAngles, azimuthAngles, indexing='ij')
+def plot2d_generic(z_mat, x_vec, y_vec):
+    """
+    Generic 2D surf plot with x and y positions defined by the vector
+    x_vec and y_vec
+
+    Parameters
+    ----------
+    z_mat : 2D matrix
+        Matrix with z values.
+    x_vec : 1D vector
+        Vector with x positions corresponding to values in z_mat.
+    y_vec : 1D vector
+        Vector with y positions corresponding to values in z_mat.
+
+    Returns
+    -------
+    None.
+
+    """
+    iMesh, jMesh = np.meshgrid(x_vec, y_vec, indexing='ij')
     iMesh = iMesh/(2*np.pi)*360
     jMesh = jMesh/(2*np.pi)*360
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    ax.plot_surface(jMesh, iMesh, R, cmap=cm.jet)
+    ax.plot_surface(jMesh, iMesh, z_mat, cmap=cm.jet)
     ax.set_xlabel('phi')
     ax.set_ylabel('theta')
     plt.show()
     
 
-def calculate_radiation_pattern(antennaArray, w, poleAngles, azimuthAngles,
-                              wavenumber):
+def calculate_radiation_pattern(antennaArray, w, poleAngles, azimuthAngles, wavenumber):
+    """
+    Calculates the array radiation pattern by calculating the signal amplification
+    of the signal coming from the directions defined by poleAngles and azimuthAngles.
+
+    Parameters
+    ----------
+    antennaArray : AntennaArray
+        AntennaArray object that defines the antenna array.
+    w : 1D vector
+        Weighting factor for the array element in AntennaArray.arrayElements.
+    poleAngles : 1D vector
+        The pole angles to be scanned.
+    azimuthAngles : 1D vector
+        The azimuth angles to be scanned.
+    wavenumber : floating point
+        2*pi/lambda of the system.
+
+    Returns
+    -------
+    arrayPattern : 2D matrix
+        Matrix where its values represent received signal amplitude where the
+        axis0 and axis1 of the matrix corresponds to the direction of arrival 
+        given by the poleAngles and azimuthAngles respectively.
+
+    """
     poleResolution = poleAngles.size
     azimuthResolution = azimuthAngles.size
 
@@ -64,6 +106,42 @@ def array_processing(antennaArray, wavenumber,
                      poleResolution, azimuthResolution,
                      plotThetaRange, plotPhiRange,
                      plotMode):
+    """
+    Performs the analysis of the antenna array.
+    1. Plots position and orientation of each antenna elements of the array
+    2. Calculates the weighting factors with the method given by 'beamformer'
+    3. Calculates the radiation pattern
+    4. Plots the radiation pattern
+    5. Print out amplitude and phase shift of the weighting factors
+
+    Parameters
+    ----------
+    antennaArray : AntennaArray
+        Instance of AntennaArray object that defines the array.
+    wavenumber : floating point
+        2*pi/lambda of the system.
+    beamformer : enumerations.BeamFormer or None
+        The type of beamforming to perform.
+    beamformerTheta : floating point
+        Pole angle of the beamforming direction.
+    beamformerPhi : floating point
+        Azimuth angle of the beamforming direction.
+    poleResolution : integer
+        How many angle steps the pole angle has for plotting.
+    azimuthResolution : integer
+        How man angle steps the azimuth angle has for plotting.
+    plotThetaRange : floating poing
+        The angle range of the pole angle for plotting.
+    plotPhiRange : floating poing
+        The angle range of the azimuth angle for plotting.
+    plotMode : enumerations.PlotMode
+        Plotting mode for radiation pattern plot.
+
+    Returns
+    -------
+    None.
+
+    """
     arrayElements = antennaArray.arrayElements
     ## plot antenna positions
     # plot_antenna_topology.plotDots(antennaArray)
@@ -77,8 +155,8 @@ def array_processing(antennaArray, wavenumber,
     elif beamformer is BeamFormer.Projection:
         # create cartesian direction vector in the direction of desired beam steering
         dv = spherical_to_cartesian(1, 
-                                                     beamformerTheta, 
-                                                     beamformerPhi).reshape(-1,1)
+                                    beamformerTheta, 
+                                    beamformerPhi).reshape(-1,1)
     
         # create list of antenna position vectors from all elements
         pv_list = [ antennaElement.positionVector for antennaElement in arrayElements ]

@@ -2,9 +2,37 @@ import numpy as np
 import utils
 from utils import get_radius_of_equal_distance, spherical_to_cartesian
 
+# TODO: abstract class AntennaArray?
+
 class LinearArray():
+    """
+    Class that creates and stores attributes of a linear array formation
+    """
     def __init__(self, AntennaElementClass, wavelength, elementDistanceFactor=0.5, 
                  numElements=10, xOffset=None):
+        """
+        Create linear antenna array.
+
+        Parameters
+        ----------
+        AntennaElementClass : AntennaElement
+            The AntennaElement class from which to instantiate each antenna element from.
+        wavelength : floating point
+            lambda of the system.
+        elementDistanceFactor : floating poing, optional
+            Defines the distance of the antenna element.
+            elementDistance = wavelength*elementDistanceFactor.
+            The default is 0.5.
+        numElements : integer, optional
+            number of elements for the linear array. The default is 10.
+        xOffset : floating point, optional
+            x-position offset of the linear array position. The default is None.
+
+        Returns
+        -------
+        None.
+
+        """
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDistanceFactor
         self.numElements = numElements
@@ -33,9 +61,41 @@ class LinearArray():
         return arrayElements
     
 class CircularArray():
+    """
+    Class that creates and stores attributes of a circular array formation
+    """
     def __init__(self, AntennaElementClass, wavelength, elementDisctanceFactor=0.5, 
                  numElements=10, circularAng=2*np.pi, 
                  elementPoleAng=np.pi/2, circularAzimuthOffset=0):
+        """
+        Create circular array.
+
+        Parameters
+        ----------
+        AntennaElementClass : AntennaElement
+            The AntennaElement class from which to instantiate each antenna element from.
+        wavelength : floating point
+            lambda of the system.
+        elementDisctanceFactor : floating point, optional
+            Defines the distance of the antenna element.
+            elementDistance = wavelength*elementDistanceFactor.
+            The default is 0.5.
+        numElements : integer, optional
+            number of elements for the circular array. The default is 10.
+        circularAng : floating poing, optional
+            Angle of the arc. The default is 2*np.pi (whole circle).
+        elementPoleAng : floating poing, optional
+            Pole angle orientation of the antenna elements. 
+            The default is np.pi/2 (pointing outwards).
+        circularAzimuthOffset : floating poing, optional
+            Azimuth angle offset where the first antenna element shall be positioned. 
+            The default is 0.
+
+        Returns
+        -------
+        None.
+
+        """
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDisctanceFactor
         self.numElements = numElements
@@ -69,10 +129,43 @@ class CircularArray():
         return arrayElements
     
 class LinearCircularArray():
+    """
+    Class that creates and stores attributes of a cylindrical array formation
+    """
     def __init__(self, AntennaElementClass, wavelength,
                  linearDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numLinearElements=10, numCircularElements=10,
                  circularAng=2*np.pi):
+        """
+        Create cylindrical array.
+        The cylindrical array consists of multiple linear arrays arranged in a circle.
+
+        Parameters
+        ----------
+        AntennaElementClass : AntennaElement
+            The AntennaElement class from which to instantiate each antenna element from.
+        wavelength : floating poing
+            lambda of the system.
+        linearDistanceFactor : floating point, optional
+            Defines the distance of the linear array antenna element.
+            linearElementDistance = wavelength*linearDistanceFactor.
+            The default is 0.5.
+        circularDistanceFactor : floating point, optional
+            Defines the distance of the circular array antenna element.
+            circularElementDistance = wavelength*circularDistanceFactor.
+            The default is 0.5.
+        numLinearElements : int, optional
+            number of elements for the linear array. The default is 10.
+        numCircularElements : TYPE, optional
+            number of elements for the circular array. The default is 10.
+        circularAng : TYPE, optional
+            Angle of the circle arc. The default is 2*np.pi (whole circle).
+
+        Returns
+        -------
+        None.
+
+        """
         self.AntennaElementClass = AntennaElementClass
         self.wavelength = wavelength
         self.linearElementDistance = wavelength*linearDistanceFactor
@@ -113,10 +206,46 @@ class LinearCircularArray():
         return arrayElements  
     
 class BowCircularArray():
+    """
+    Clas that creates and stores attributes of a bow circular array formation
+    """
     def __init__(self, AntennaElementClass, wavelength,
                  bowDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numBowElements=10, numCircularElements=10,
                  bowAng=np.pi/2, circularAng=2*np.pi):
+        """
+        Create bow-circular array.
+        Bow-circular array consists of multiple bow arrays (antennas placed along
+        an arc) arranged in a circle.
+
+        Parameters
+        ----------
+        AntennaElementClass : AntennaElement
+            The AntennaElement class from which to instantiate each antenna element from.
+        wavelength : floating point
+            lambda of the system.
+        bowDistanceFactor : floating point, optional
+            Defines the distance of the bow array antenna elements.
+            bowElementDistance = wavelength*bowDistanceFactor.
+            The default is 0.5.
+        circularDistanceFactor : floating point, optional
+            Defines the distance of the circular array antenna element.
+            circularElementDistance = wavelength*circularDistanceFactor.
+            The default is 0.5.
+        numBowElements : integer, optional
+            number of elements for the bow array. The default is 10.
+        numCircularElements : integer, optional
+            number of elements for the circular array. The default is 10.
+        bowAng : TYPE, optional
+            Angle of the bow arc. The default is np.pi/2 (half circle).
+        circularAng : TYPE, optional
+            Angle of the circle arc. The default is 2*np.pi (whole circle).
+
+        Returns
+        -------
+        None.
+
+        """
         self.AntennaElementClass = AntennaElementClass
         self.wavelength = wavelength
         self.bowElementDistance = wavelength*bowDistanceFactor

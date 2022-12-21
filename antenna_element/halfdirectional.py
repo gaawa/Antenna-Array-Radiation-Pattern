@@ -2,6 +2,9 @@ from antenna_element.antenna_element_abs import AntennaElement
 import numpy as np
 
 class HalfdirectionalAntennaElement(AntennaElement):
+    """
+    Defines an antenna element with hemispheric radiation pattern.
+    """
     def __init__(self, positionVector, thetaOrientationVector, phiOrientationVector):
         super().__init__(positionVector, thetaOrientationVector, phiOrientationVector)
 

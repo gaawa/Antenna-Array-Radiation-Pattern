@@ -22,11 +22,11 @@ AntennaElementClass = HalfdirectionalAntennaElement
 AntennaElementClass = OmnidirectionalAntennaElement
 
 ## spawn antenna elements in linear array
-antennaArray = BowCircularArray(AntennaElementClass, wavelength)
+antennaArray = LinearArray(AntennaElementClass, wavelength, numElements=4, elementDistanceFactor=0.5)
 
 ## select beamformer type
 beamformer = None 
-beamformer = BeamFormer.Projection
+# beamformer = BeamFormer.Projection
 
 ## set desired beamforming direction
 beamformerTheta = np.pi/5

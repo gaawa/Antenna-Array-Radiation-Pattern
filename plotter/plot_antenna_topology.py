@@ -4,6 +4,19 @@ import matplotlib.pyplot as plt
 
 # plot antenna positions
 def plot_dots(antennaArray):
+    """
+    Creates 3D scatter plot of antenna element position
+
+    Parameters
+    ----------
+    antennaArray : list(AntennaElement)
+        List containing antenna elements.
+
+    Returns
+    -------
+    None.
+
+    """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     for antennaElement in antennaArray:
@@ -14,6 +27,26 @@ def plot_dots(antennaArray):
     plt.show()
     
 def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1):
+    """
+    Creatres 3D scatter plot of antenna element position and arrows representing
+    antenna element orientation.
+    Blue arrow represents vector of 0 pole angle.
+    Red arrow represents vector of 0 azimuth angle.
+
+    Parameters
+    ----------
+    antennaArray : list(AntennaElement)
+        List containing antenna elements.
+    ax_size : floating point, optional
+        Defines axis limits with [-ax_size, ax_size]. The default is 0.5.
+    arrow_size : floating point, optional
+        Size of arrows for quiver plot. The default is 1.
+
+    Returns
+    -------
+    None.
+
+    """
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     
