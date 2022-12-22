@@ -1,10 +1,41 @@
 import numpy as np
 import utils
 from utils import get_radius_of_equal_distance, spherical_to_cartesian
+from abc import ABC
 
-# TODO: abstract class AntennaArray?
 
-class LinearArray():
+class AntennaArray(ABC):
+    """
+    Abstract base class for all antenna array classes
+    """
+    def __init__(self, arrayElements, ax_size, arrow_size):
+        """
+        This ABC requires the list of antenna elements, axis size for antenna 
+        element plot by [-ax_size, ax_size] and the arrow size for overlaying 
+        quiver plot.
+
+        Parameters
+        ----------
+        AntennaElementClass : AntennaElement
+            The AntennaElement class from which to instantiate each antenna element from.
+        arrayElements : list(AntennaElement)
+            list of antenna element objects belonging to this antenna array.
+        ax_size : floating point
+            axis size for antenna element plot by [-ax_size, ax_size].
+        arrow_size : floating point
+            arrow
+            size for overlaying quiver plot.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.arrayElements = arrayElements
+        self.ax_size = ax_size
+        self.arrow_size = arrow_size
+
+class LinearArray(AntennaArray):
     """
     Class that creates and stores attributes of a linear array formation
     """
@@ -33,6 +64,7 @@ class LinearArray():
         None.
 
         """
+        self.AntennaElementClass = AntennaElementClass
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDistanceFactor
         self.numElements = numElements
@@ -40,12 +72,13 @@ class LinearArray():
             self.xOffset = -numElements*self.elementDistance/2
         else:
             self.xOffset = xOffset
-        self.AntennaElementClass = AntennaElementClass
+            
+        arrayElements = self.generateArray()
         
-        self.ax_size = 1.2*numElements*self.elementDistance
-        self.arrow_size = 0.5*self.elementDistance
+        ax_size = 1.2*numElements*self.elementDistance
+        arrow_size = 0.5*self.elementDistance
         
-        self.arrayElements = self.generateArray()
+        super().__init__(arrayElements, ax_size, arrow_size)
 
     def generateArray(self):
         arrayElements = []
@@ -60,7 +93,7 @@ class LinearArray():
     
         return arrayElements
     
-class CircularArray():
+class CircularArray(AntennaArray):
     """
     Class that creates and stores attributes of a circular array formation
     """
@@ -96,21 +129,23 @@ class CircularArray():
         None.
 
         """
+        self.AntennaElementClass = AntennaElementClass
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDisctanceFactor
         self.numElements = numElements
         self.circularAng = circularAng
-        self.AntennaElementClass = AntennaElementClass
         self.elementRadius = get_radius_of_equal_distance(self.elementDistance, 
                                                           numElements,
                                                           ang=circularAng)
         self.elementPoleAng = elementPoleAng
         self.circularAzimuthOffset = circularAzimuthOffset
         
-        self.ax_size = 1.2*2*self.elementRadius
-        self.arrow_size = 0.5*(2*np.pi*self.elementRadius/numElements)
+        ax_size = 1.2*2*self.elementRadius
+        arrow_size = 0.5*(2*np.pi*self.elementRadius/numElements)
         
-        self.arrayElements = self.generateArray()
+        arrayElements = self.generateArray()
+        
+        super().__init__(arrayElements, ax_size, arrow_size)
 
 
     def generateArray(self):
@@ -128,7 +163,7 @@ class CircularArray():
     
         return arrayElements
     
-class LinearCircularArray():
+class LinearCircularArray(AntennaArray):
     """
     Class that creates and stores attributes of a cylindrical array formation
     """
@@ -177,12 +212,14 @@ class LinearCircularArray():
                                                            self.numCircularElements,
                                                            ang=circularAng)
         
-        self.ax_size = 1.2 * max(self.numLinearElements*self.linearElementDistance,
-                        2*self.circularRadius)
-        self.arrow_size = 0.5 * min(self.linearElementDistance,
+        ax_size = 1.2 * max(self.numLinearElements*self.linearElementDistance,
+                            2*self.circularRadius)
+        arrow_size = 0.5 * min(self.linearElementDistance,
                                2*np.pi*self.circularRadius/self.numCircularElements)
         
-        self.arrayElements = self.generateArray()
+        arrayElements = self.generateArray()
+        
+        super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
         angularDistance = 2*np.pi/self.numCircularElements
@@ -205,7 +242,7 @@ class LinearCircularArray():
                 
         return arrayElements  
     
-class BowCircularArray():
+class BowCircularArray(AntennaArray):
     """
     Clas that creates and stores attributes of a bow circular array formation
     """
@@ -264,12 +301,14 @@ class BowCircularArray():
                                                            numCircularElements,
                                                            ang=self.circularAng)
         
-        self.ax_size = 1.2 * 2*self.circularRadius
+        ax_size = 1.2 * 2*self.circularRadius
         arrow_size_circ = 0.5 * 2*np.pi*self.circularRadius/numCircularElements
         arrow_size_bow = 0.5 * 2*np.pi*self.bowRadius/numBowElements
-        self.arrow_size = min(arrow_size_circ, arrow_size_bow)
+        arrow_size = min(arrow_size_circ, arrow_size_bow)
         
-        self.arrayElements = self.generateArray()
+        arrayElements = self.generateArray()
+        
+        super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
         circAngularDistance = 2*np.pi/self.numCircularElements
