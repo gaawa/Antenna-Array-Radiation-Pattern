@@ -26,7 +26,7 @@ def plot_dots(antennaArray):
         ax.scatter(xPos, yPos, zPos, marker='o', color='b')
     plt.show()
     
-def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1):
+def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1, scale_arrow=1):
     """
     Creatres 3D scatter plot of antenna element position and arrows representing
     antenna element orientation.
@@ -41,6 +41,8 @@ def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1):
         Defines axis limits with [-ax_size, ax_size]. The default is 0.5.
     arrow_size : floating point, optional
         Size of arrows for quiver plot. The default is 1.
+    scale_arrow : floating point or vector with the same dimension of antennaArray
+        scale the arrows belonging to all or to the specific antenna element by the specified amount.
 
     Returns
     -------
@@ -54,10 +56,12 @@ def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1):
     xPosVec, yPosVec, zPosVec = zip(*elementPosList)
     
     thetaVecList = [antennaElement.thetaOrientationVector*arrow_size for antennaElement in antennaArray]
-    xDirVecT, yDirVecT, zDirVecT = zip(*thetaVecList)
+    thetaVecScaled = thetaVecList*scale_arrow
+    xDirVecT, yDirVecT, zDirVecT = zip(*thetaVecScaled)
     
     phiVecList = [antennaElement.phiOrientationVector*arrow_size for antennaElement in antennaArray]
-    xDirVecP, yDirVecP, zDirVecP = zip(*phiVecList)
+    phiVecScaled = phiVecList*scale_arrow
+    xDirVecP, yDirVecP, zDirVecP = zip(*phiVecScaled)
     
     # xPosVec = xPosVec+xPosVec
     # yPosVec = yPosVec+yPosVec

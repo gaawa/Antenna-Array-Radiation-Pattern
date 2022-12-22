@@ -101,18 +101,16 @@ def calculate_radiation_pattern(antennaArray, w, poleAngles, azimuthAngles, wave
     return arrayPattern
 
 
-def array_processing(antennaArray, wavenumber, 
-                     beamformer, beamformerTheta, beamformerPhi,
+def array_processing(antennaArray, wavenumber, w,
                      poleResolution, azimuthResolution,
                      plotThetaRange, plotPhiRange,
                      plotMode):
     """
     Performs the analysis of the antenna array.
     1. Plots position and orientation of each antenna elements of the array
-    2. Calculates the weighting factors with the method given by 'beamformer'
-    3. Calculates the radiation pattern
-    4. Plots the radiation pattern
-    5. Print out amplitude and phase shift of the weighting factors
+    2. Calculates the radiation pattern
+    3. Plots the radiation pattern
+    4. Print out amplitude and phase shift of the weighting factors
 
     Parameters
     ----------
@@ -120,12 +118,9 @@ def array_processing(antennaArray, wavenumber,
         Instance of AntennaArray object that defines the array.
     wavenumber : floating point
         2*pi/lambda of the system.
-    beamformer : enumerations.BeamFormer or None
-        The type of beamforming to perform.
-    beamformerTheta : floating point
-        Pole angle of the beamforming direction.
-    beamformerPhi : floating point
-        Azimuth angle of the beamforming direction.
+    w : vector in 2D matrix (Nx1 matrix)
+        Weighting factor corresponding to antenna elements in 
+        antennaArray.antennaElements
     poleResolution : integer
         How many angle steps the pole angle has for plotting.
     azimuthResolution : integer
@@ -147,27 +142,9 @@ def array_processing(antennaArray, wavenumber,
     # plot_antenna_topology.plotDots(antennaArray)
     plot_antenna_topology.plot_quiver(arrayElements, 
                                      ax_size=antennaArray.ax_size, 
-                                     arrow_size=antennaArray.arrow_size)
+                                     arrow_size=antennaArray.arrow_size,
+                                     scale_arrow = np.abs(w))
     
-    ## calculate weight vector (Beamforming)
-    if not beamformer:
-        w = np.ones((len(arrayElements),1))
-    elif beamformer is BeamFormer.Projection:
-        # create cartesian direction vector in the direction of desired beam steering
-        dv = spherical_to_cartesian(1, 
-                                    beamformerTheta, 
-                                    beamformerPhi).reshape(-1,1)
-    
-        # create list of antenna position vectors from all elements
-        pv_list = [ antennaElement.positionVector for antennaElement in arrayElements ]
-        pv_matrix = np.array(pv_list).T
-        
-        # projection of direction to position vector gives the propagation distance
-        # relative to reference point (0,0,0).
-        L_matrix = pv_matrix.T @ dv
-        
-        deltaPhase = L_matrix*wavenumber
-        w = np.exp(-1j*deltaPhase)
     
     ## calculate radiation pattern
     poleAngles = np.array(range(poleResolution))/(poleResolution-1)*plotThetaRange
