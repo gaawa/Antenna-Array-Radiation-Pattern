@@ -169,7 +169,7 @@ class LinearCircularArray(AntennaArray):
     """
     def __init__(self, AntennaElementClass, wavelength,
                  linearDistanceFactor=0.5, circularDistanceFactor=0.5,
-                 numLinearElements=10, numCircularElements=10,
+                 numLinearElements=4, numCircularElements=10,
                  circularAng=2*np.pi):
         """
         Create cylindrical array.
@@ -248,7 +248,7 @@ class BowCircularArray(AntennaArray):
     """
     def __init__(self, AntennaElementClass, wavelength,
                  bowDistanceFactor=0.5, circularDistanceFactor=0.5,
-                 numBowElements=10, numCircularElements=10,
+                 numBowElements=4, numCircularElements=10,
                  bowAng=np.pi/2, circularAng=2*np.pi):
         """
         Create bow-circular array.
