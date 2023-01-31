@@ -75,6 +75,7 @@ def spherical_to_cartesian(R, theta, phi):
     numpy array
         Array containing x, y and z of the cartesian coordinate system.
         Array dimension depends on the input array dimension.
+        When the inputs are vectors of size N then 3xN
 
     """
     return np.array([R*np.sin(theta)*np.cos(phi),
