@@ -9,9 +9,9 @@ from antenna_array import LinearArray, CircularArray, LinearCircularArray, BowCi
 from enumerations import PlotMode, BeamFormer
 import scipy.constants as spc
 import numpy as np
-from antenna_element.omnidirectional import OmnidirectionalAntennaElement
-from antenna_element.halfdirectional import HalfdirectionalAntennaElement
-from antenna_element.circledirectional import CircledirectionalAntennaElement
+from antenna_pattern.omnidirectional import OmnidirectionalAntennaPattern
+from antenna_pattern.halfdirectional import HalfdirectionalAntennaPattern
+from antenna_pattern.circledirectional import CircledirectionalAntennaPattern
 from beamformer import no_beamformer, projection_beamformer, partial_projection_beamformer
 from beamformer import synthesis_beamformer, synthesis_canceller_beamformer
 
@@ -20,15 +20,19 @@ freq = 3e9
 wavelength = spc.speed_of_light/freq
 wavenumber = 2*np.pi/wavelength
 
-## select antenna type
-AntennaElementClass = HalfdirectionalAntennaElement
-AntennaElementClass = OmnidirectionalAntennaElement
-AntennaElementClass = CircledirectionalAntennaElement
+## select antenna pattern type
+antennaPattern = HalfdirectionalAntennaPattern()
+antennaPattern = OmnidirectionalAntennaPattern()
+antennaPattern = CircledirectionalAntennaPattern()
 
 ## spawn antenna elements with specified array topology
-antennaArray = LinearArray(AntennaElementClass, wavelength, numElements=8, elementDistanceFactor=0.5)
-# antennaArray = LinearArray(AntennaElementClass, wavelength, numElements=8, elementDistanceFactor=0.5)
-antennaArray = BowCircularArray(AntennaElementClass, wavelength)
+# Single antenna element for testing
+antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDistanceFactor=0.5)
+# Linear array with 8 elements
+# antennaArray = LinearArray(antennaPattern, wavelength, numElements=8, elementDistanceFactor=0.5)
+# Spherical conformal array
+# antennaArray = BowCircularArray(antennaPattern, wavelength)
+# Zylindrical conformal array
 # antennaArray = LinearCircularArray(AntennaElementClass, wavelength)
 
 ## set desired beamforming direction

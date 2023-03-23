@@ -2,6 +2,7 @@ import numpy as np
 import utils
 from utils import get_radius_of_equal_distance, spherical_to_cartesian
 from abc import ABC
+from antenna_element import AntennaElement
 
 
 class AntennaArray(ABC):
@@ -16,8 +17,6 @@ class AntennaArray(ABC):
 
         Parameters
         ----------
-        AntennaElementClass : AntennaElement
-            The AntennaElement class from which to instantiate each antenna element from.
         arrayElements : list(AntennaElement)
             list of antenna element objects belonging to this antenna array.
         ax_size : floating point
@@ -39,15 +38,15 @@ class LinearArray(AntennaArray):
     """
     Class that creates and stores attributes of a linear array formation
     """
-    def __init__(self, AntennaElementClass, wavelength, elementDistanceFactor=0.5, 
+    def __init__(self, antennaPattern, wavelength, elementDistanceFactor=0.5, 
                  numElements=10, xOffset=None):
         """
         Create linear antenna array.
 
         Parameters
         ----------
-        AntennaElementClass : AntennaElement
-            The AntennaElement class from which to instantiate each antenna element from.
+        antennaPattern : AntennaPattern
+            
         wavelength : floating point
             lambda of the system.
         elementDistanceFactor : floating poing, optional
@@ -64,7 +63,7 @@ class LinearArray(AntennaArray):
         None.
 
         """
-        self.AntennaElementClass = AntennaElementClass
+        self.antennaPattern = antennaPattern
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDistanceFactor
         self.numElements = numElements
@@ -89,7 +88,7 @@ class LinearArray(AntennaArray):
         for n in range(self.numElements):
             xPos = (self.elementDistance*n)+self.xOffset
             positionVector = np.array([xPos, 0, 0])
-            arrayElements.append(self.AntennaElementClass(positionVector, thetaOrientVec, phiOrientVec))
+            arrayElements.append(AntennaElement(self.antennaPattern, positionVector, thetaOrientVec, phiOrientVec))
     
         return arrayElements
     
@@ -97,7 +96,7 @@ class CircularArray(AntennaArray):
     """
     Class that creates and stores attributes of a circular array formation
     """
-    def __init__(self, AntennaElementClass, wavelength, elementDisctanceFactor=0.5, 
+    def __init__(self, antennaPattern, wavelength, elementDisctanceFactor=0.5, 
                  numElements=10, circularAng=2*np.pi, 
                  elementPoleAng=np.pi/2, circularAzimuthOffset=0):
         """
@@ -105,8 +104,8 @@ class CircularArray(AntennaArray):
 
         Parameters
         ----------
-        AntennaElementClass : AntennaElement
-            The AntennaElement class from which to instantiate each antenna element from.
+        antennaPattern : AntennaPattern
+            Object that defines the antenna radiation pattern of the antenna element used in this array.
         wavelength : floating point
             lambda of the system.
         elementDisctanceFactor : floating point, optional
@@ -129,7 +128,7 @@ class CircularArray(AntennaArray):
         None.
 
         """
-        self.AntennaElementClass = AntennaElementClass
+        self.antennaPattern = antennaPattern
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDisctanceFactor
         self.numElements = numElements
@@ -159,7 +158,7 @@ class CircularArray(AntennaArray):
             positionVector = np.array([xPos, yPos, 0])
             thetaOrientVec = spherical_to_cartesian(1, self.elementPoleAng, elementAzimuth)
             phiOrientVec = spherical_to_cartesian(1, np.pi/2, elementAzimuth+np.pi/2)
-            arrayElements.append(self.AntennaElementClass(positionVector, thetaOrientVec, phiOrientVec))
+            arrayElements.append(AntennaElement(self.antennaPattern, positionVector, thetaOrientVec, phiOrientVec))
     
         return arrayElements
     
@@ -167,7 +166,7 @@ class LinearCircularArray(AntennaArray):
     """
     Class that creates and stores attributes of a cylindrical array formation
     """
-    def __init__(self, AntennaElementClass, wavelength,
+    def __init__(self, antennaPattern, wavelength,
                  linearDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numLinearElements=4, numCircularElements=10,
                  circularAng=2*np.pi):
@@ -177,8 +176,8 @@ class LinearCircularArray(AntennaArray):
 
         Parameters
         ----------
-        AntennaElementClass : AntennaElement
-            The AntennaElement class from which to instantiate each antenna element from.
+        antennaPattern : AntennaPattern
+            Object that defines the antenna radiation pattern of the antenna element used in this array.
         wavelength : floating poing
             lambda of the system.
         linearDistanceFactor : floating point, optional
@@ -201,7 +200,7 @@ class LinearCircularArray(AntennaArray):
         None.
 
         """
-        self.AntennaElementClass = AntennaElementClass
+        self.antennaPattern = antennaPattern
         self.wavelength = wavelength
         self.linearElementDistance = wavelength*linearDistanceFactor
         self.circularElementDistance = wavelength*circularDistanceFactor
@@ -238,15 +237,15 @@ class LinearCircularArray(AntennaArray):
                 # elements are facing outwards
                 thetaOrientVec = utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth)
                 phiOrientVec = utils.spherical_to_cartesian(1, np.pi/2, elementAzimuth+np.pi/2)
-                arrayElements.append(self.AntennaElementClass(positionVector, thetaOrientVec, phiOrientVec))
+                arrayElements.append(AntennaElement(self.antennaPattern, positionVector, thetaOrientVec, phiOrientVec))
                 
         return arrayElements  
     
 class BowCircularArray(AntennaArray):
     """
-    Clas that creates and stores attributes of a bow circular array formation
+    Class that creates and stores attributes of a bow circular array formation
     """
-    def __init__(self, AntennaElementClass, wavelength,
+    def __init__(self, antennaPattern, wavelength,
                  bowDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numBowElements=4, numCircularElements=10,
                  bowAng=np.pi/2, circularAng=2*np.pi):
@@ -257,8 +256,8 @@ class BowCircularArray(AntennaArray):
 
         Parameters
         ----------
-        AntennaElementClass : AntennaElement
-            The AntennaElement class from which to instantiate each antenna element from.
+        antennaPattern : AntennaPattern
+            Object that defines the antenna radiation pattern of the antenna element used in this array.
         wavelength : floating point
             lambda of the system.
         bowDistanceFactor : floating point, optional
@@ -283,7 +282,7 @@ class BowCircularArray(AntennaArray):
         None.
 
         """
-        self.AntennaElementClass = AntennaElementClass
+        self.antennaPattern = antennaPattern
         self.wavelength = wavelength
         self.bowElementDistance = wavelength*bowDistanceFactor
         self.circularElementDistance = wavelength*circularDistanceFactor
@@ -336,6 +335,6 @@ class BowCircularArray(AntennaArray):
                 phiOrientVec = utils.spherical_to_cartesian(1, 
                                                                        np.pi/2, 
                                                                        elementAzimuth+np.pi/2)
-                arrayElements.append(self.AntennaElementClass(rotPosVec, thetaOrientVec, phiOrientVec))
+                arrayElements.append(AntennaElement(self.antennaPattern, rotPosVec, thetaOrientVec, phiOrientVec))
     
         return arrayElements
