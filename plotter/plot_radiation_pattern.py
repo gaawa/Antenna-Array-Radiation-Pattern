@@ -41,7 +41,7 @@ def plot2d(arrayPattern, poleAngles, azimuthAngles):
     ax.set_zlim(np.nanmax(arrayPatternLog)-40, np.nanmax(arrayPatternLog))
     plt.show()
 
-def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40):
+def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40, logMinValue=-300):
     """
     3D surf plot of radiation pattern.
 
@@ -70,6 +70,8 @@ def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40)
     if logMode:
         # set values below the limit of max-logRange to the limit
         arrayPatternLog = 10*np.log10(np.abs((arrayPattern)**2))
+        arrayPatternLog[np.isneginf(arrayPatternLog)] = logMinValue; # Replace -inf = log(0) with very small number logMinValue (e.g. -300 [dB])
+
         correction = -arrayPatternLog.max()+logRange
         arrayPatternLog = arrayPatternLog + correction
         arrayPatternLog[arrayPatternLog<0] = 0
