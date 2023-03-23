@@ -98,19 +98,34 @@ class AntennaElement(ABC):
         # convert input to 3x1 column vector or 3xN matrix of column vectors
         signalVecGlobal = signalVecGlobal.reshape(3,-1)
         
-        # calculate local poleAngle (theta) and Azimuth (phi)
+        # calculate local poleAngle (theta)
+        # t.u' = |t|*|u|*cos(theta) -> solve to theta
         theta = np.arccos( np.dot(self.thetaOrientationVector, signalVecGlobal) /
-                           ( np.linalg.norm(self.thetaOrientationVector)
-                            *np.linalg.norm(signalVecGlobal, axis=0) ))
+                           (  np.linalg.norm(self.thetaOrientationVector)
+                            * np.linalg.norm(signalVecGlobal, axis=0) ))
         
+        # calculate local Azimuth (phi)
+        # Step 1) Project to theta-axis: u_t = proj u->t = u.t' / (||t||^2) * t
         signalThetaAxisProjection = (np.dot(self.thetaOrientationVector, signalVecGlobal) 
                                     / np.linalg.norm(self.thetaOrientationVector)**2
-                                    * self.thetaOrientationVector.reshape((3,-1)) )                       
+                                    * self.thetaOrientationVector.reshape((3,-1)) )
+        # Step 2) Obtain signal vector projected onto antenna plane: u_Ap = proj u->Ap = u - u_t
         signalAntPlaneProjection = signalVecGlobal - signalThetaAxisProjection
-        phi = np.arccos( np.dot(self.phiOrientationVector, signalAntPlaneProjection) /
-                           ( np.linalg.norm(self.phiOrientationVector)
-                            *np.linalg.norm(signalAntPlaneProjection, axis=0) ) )
-        
+        # Step 3) Obtain cos(phi) between u_Ap and phi-axis: p.u_Ap' = ||p|| * ||u_Ap|| * cos(phi)
+        cosphi = (np.dot(self.phiOrientationVector, signalAntPlaneProjection) /
+                    (  np.linalg.norm(self.phiOrientationVector)
+                     * np.linalg.norm(signalAntPlaneProjection, axis=0) ))
+        # Step 4) Obtain sin(phi) between u_Ap and phi-axis: p x u_Ap = ||p|| * ||u_A|| * sin(phi) * n
+        # Get value along normal vector n by projecting (p x u_Ap)/(||p|| * ||u_A||) onto n.
+        # Note that normal vector n is equivalent to theta-axis unit vector
+        sinphi_normal = ( np.cross(self.phiOrientationVector[:,None], signalAntPlaneProjection, axis=0) /
+                            (  np.linalg.norm(self.phiOrientationVector)
+                            * np.linalg.norm(signalAntPlaneProjection, axis=0) ))
+        sinphi = np.dot(self.thetaOrientationVector, sinphi_normal)
+        # Step 5) Calculate full [0, 2*pi] phi angle
+        phi = np.arctan2(sinphi, cosphi)
+        phi = np.nan_to_num(phi)
+
         signalAngLocal = np.array([ theta,
-                                    phi ])
+                                    np.nan_to_num(phi, nan=0.0) ])
         return self.get_element_factor_element_basis(signalAngLocal)
