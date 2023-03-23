@@ -82,8 +82,16 @@ def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40,
         R = arrayPatternLog
         
     else:
-        # TODO: scalar plot
-        pass
+        arrayPatternABS = np.abs(arrayPattern)
+        
+        iMesh, jMesh = np.meshgrid(poleAngles, azimuthAngles, indexing='ij')
+        arrayPatternCoord = utils.spherical_to_cartesian(arrayPatternABS, 
+                                                         iMesh, jMesh)
+        
+        correction = 0
+        arrayPatternABS = arrayPatternABS + correction
+        R = arrayPatternABS
+
     
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1, projection='3d')
