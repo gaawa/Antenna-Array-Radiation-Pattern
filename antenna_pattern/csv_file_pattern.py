@@ -43,7 +43,7 @@ class CsvFilePattern(AntennaPattern):
             ax[0].legend(["theta","phi"])
             ax[1].legend(["theta","phi"])
             ax[0].set_title(["Program Winkel"])
-            ax[1].set_title(["Ansys Winkel"])
+            ax[1].set_title(["CSV Winkel"])
 
             plt.show(block=True)
 
