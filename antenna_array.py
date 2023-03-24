@@ -273,7 +273,7 @@ class BowCircularArray(AntennaArray):
         numCircularElements : integer, optional
             number of elements for the circular array. The default is 10.
         bowAng : TYPE, optional
-            Angle of the bow arc. The default is np.pi/2 (half circle).
+            Angle of the bow arc. The default is np.pi/2 (quarter circle).
         circularAng : TYPE, optional
             Angle of the circle arc. The default is 2*np.pi (whole circle).
 
