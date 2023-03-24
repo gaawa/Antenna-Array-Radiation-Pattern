@@ -310,7 +310,7 @@ class BowCircularArray(AntennaArray):
         super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
-        circAngularDistance = 2*np.pi/self.numCircularElements
+        circAngularDistance = self.circularAng/self.numCircularElements
     
         # generate positions of a arm of bow
         numBowAngSlices = self.numBowElements-1
@@ -330,11 +330,11 @@ class BowCircularArray(AntennaArray):
                 refPosVec = np.array([[xPosVec[m]], [0], [zPosVec[m]]])
                 rotPosVec = np.squeeze(np.matmul(rotMatZ, refPosVec))
                 thetaOrientVec = utils.spherical_to_cartesian(1, 
-                                                                         elementPoleAngles[m], 
-                                                                         elementAzimuth)
+                                                              elementPoleAngles[m], 
+                                                              elementAzimuth)
                 phiOrientVec = utils.spherical_to_cartesian(1, 
-                                                                       np.pi/2, 
-                                                                       elementAzimuth+np.pi/2)
+                                                            np.pi/2, 
+                                                            elementAzimuth+np.pi/2)
                 arrayElements.append(AntennaElement(self.antennaPattern, rotPosVec, thetaOrientVec, phiOrientVec))
     
         return arrayElements
