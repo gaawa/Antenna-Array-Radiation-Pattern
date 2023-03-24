@@ -12,6 +12,7 @@ import numpy as np
 from antenna_pattern.omnidirectional import OmnidirectionalAntennaPattern
 from antenna_pattern.halfdirectional import HalfdirectionalAntennaPattern
 from antenna_pattern.circledirectional import CircledirectionalAntennaPattern
+from antenna_pattern.csv_file_pattern import CsvFilePattern
 from beamformer import no_beamformer, projection_beamformer, partial_projection_beamformer
 from beamformer import synthesis_beamformer, synthesis_canceller_beamformer
 
@@ -24,6 +25,7 @@ wavenumber = 2*np.pi/wavelength
 antennaPattern = HalfdirectionalAntennaPattern()
 antennaPattern = OmnidirectionalAntennaPattern()
 antennaPattern = CircledirectionalAntennaPattern()
+antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv')
 
 ## spawn antenna elements with specified array topology
 # Single antenna element for testing
