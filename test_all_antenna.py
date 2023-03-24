@@ -33,7 +33,7 @@ antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDis
 # Linear array with 8 elements
 antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
 # Spherical conformal array
-antennaArray = BowCircularArray(antennaPattern, wavelength, circularAng=np.pi/4, bowAng=np.pi/2)
+antennaArray = BowCircularArray(antennaPattern, wavelength)
 # Zylindrical conformal array
 # antennaArray = LinearCircularArray(antennaPattern, wavelength) 
 
@@ -46,6 +46,7 @@ w = no_beamformer(antennaArray)
 # w = projection_beamformer(antennaArray, beamformerTheta, beamformerPhi, wavenumber)
 # w = partial_projection_beamformer(antennaArray, beamformerTheta, beamformerPhi, 
 #                                   wavenumber, active_angle=np.pi/2)
+# w = synthesis_beamformer(antennaArray, [(10, beamformerTheta, beamformerPhi)], wavenumber)
 # w = synthesis_beamformer(antennaArray, [(6, beamformerTheta, beamformerPhi),
 #                                         (0, np.radians(30), np.radians(250)),
 #                                         (0, np.radians(90), np.radians(50)),
