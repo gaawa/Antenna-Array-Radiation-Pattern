@@ -81,3 +81,35 @@ def spherical_to_cartesian(R, theta, phi):
     return np.array([R*np.sin(theta)*np.cos(phi),
                      R*np.sin(theta)*np.sin(phi),
                      R*np.cos(theta)])    
+    
+
+def get_closest_avi(array, values):
+    """
+    AVI: Array Value Index
+    Get the index of 'array' where its value are closest to the values specified by 'values' array.
+    https://stackoverflow.com/a/46184652
+
+    Parameters
+    ----------
+    array : 1D numpy array
+        The array where the index are extracted.
+        This array must be sorted in ascending order.
+    values : 1D numpy array
+        Array with values, for which, the indexes are requred.
+    """
+    # make sure array is a numpy array
+    array = np.array(array)
+
+    # 1) get insert positions of all values.
+    # specifically, if a is the array, v the value and i the index:
+    # i is such that a[i-1] < v <= a[i]
+    idxs = np.searchsorted(array, values, side="left")
+    
+    # 2) Find out whether a[i-1] or a[i] is closer.
+    # find indexes where previous index is closer.
+    prev_idx_is_less = ( ( idxs == len(array) ) | 
+                         (    np.fabs(values - array[np.maximum(idxs-1, 0)]) 
+                            < np.fabs(values - array[np.minimum(idxs, len(array)-1)]) ) )
+    idxs[prev_idx_is_less] -= 1
+    
+    return idxs
