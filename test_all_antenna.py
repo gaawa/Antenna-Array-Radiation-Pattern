@@ -22,20 +22,22 @@ wavelength = spc.speed_of_light/freq
 wavenumber = 2*np.pi/wavelength
 
 ## select antenna pattern type
-antennaPattern = HalfdirectionalAntennaPattern()
-antennaPattern = OmnidirectionalAntennaPattern()
+# antennaPattern = HalfdirectionalAntennaPattern()
+# antennaPattern = OmnidirectionalAntennaPattern()
 antennaPattern = CircledirectionalAntennaPattern()
-antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
+# antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
 
 ## spawn antenna elements with specified array topology
 # Single antenna element for testing
-antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDistanceFactor=0.5)
+# antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDistanceFactor=0.5)
 # Linear array with 8 elements
-antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
+antennaArray = LinearArray(antennaPattern, wavelength, numElements=8, elementDistanceFactor=0.5)
+# Circular array
+antennaArray = CircularArray(antennaPattern, wavelength)
+# Zylindrical conformal array
+antennaArray = LinearCircularArray(antennaPattern, wavelength) 
 # Spherical conformal array
 antennaArray = BowCircularArray(antennaPattern, wavelength)
-# Zylindrical conformal array
-# antennaArray = LinearCircularArray(antennaPattern, wavelength) 
 
 ## set desired beamforming direction
 beamformerTheta = np.pi/4
@@ -45,7 +47,7 @@ beamformerPhi = np.pi/4
 w = no_beamformer(antennaArray)
 # w = projection_beamformer(antennaArray, beamformerTheta, beamformerPhi, wavenumber)
 # w = partial_projection_beamformer(antennaArray, beamformerTheta, beamformerPhi, 
-#                                   wavenumber, active_angle=np.pi/2)
+#                                    wavenumber, active_angle=np.pi/2)
 # w = synthesis_beamformer(antennaArray, [(10, beamformerTheta, beamformerPhi)], wavenumber)
 # w = synthesis_beamformer(antennaArray, [(6, beamformerTheta, beamformerPhi),
 #                                         (0, np.radians(30), np.radians(250)),
