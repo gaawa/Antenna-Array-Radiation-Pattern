@@ -22,8 +22,7 @@ class AntennaArray(ABC):
         ax_size : floating point
             axis size for antenna element plot by [-ax_size, ax_size].
         arrow_size : floating point
-            arrow
-            size for overlaying quiver plot.
+            arrow size for overlaying quiver plot.
 
         Returns
         -------

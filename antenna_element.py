@@ -2,14 +2,14 @@ import numpy as np
 
 class AntennaElement():
     """
-    Abstract base class for all antenna element classes.
-    
-    All child classes must implement get_element_factor_element_basis function,
-    which defines the antenna element radiation pattern.
+    Class for individual array element object.
+
+    This class holds array elements informations such as the position, element orientation and its element radiation pattern.
+    It also provides a method that allows to obtain the radiation pattern using the global coordinate system.
     """
     def __init__(self, antennaPattern, positionVector, thetaOrientationVector, phiOrientationVector):
         """
-        This ABC requires the coordinate position of the antenna element 'positionVector'
+        This class requires the coordinate position of the antenna element 'positionVector'
         and two vectors 'thetaOrientationVector' and 'phiOrientationVector' which
         defines the axis of 0 pole angle and 0 azimuth angle respectively.
 
