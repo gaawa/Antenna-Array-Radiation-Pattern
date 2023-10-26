@@ -27,8 +27,14 @@ def get_radius_of_equal_distance(d, Npts, ang=2*np.pi):
         radius.
 
     """
-    
-    r = d/(2*np.sin( ang/(2*(Npts-1)) ))
+    fullCircleAng = 2*np.pi
+
+    if ang == fullCircleAng:
+        NptsSubtractor = 0
+    else:
+        NptsSubtractor = 1
+
+    r = d/(2*np.sin( ang/(2*(Npts-NptsSubtractor)) ))
     return r
     
 def cartesian_to_spherical(x, y, z):
