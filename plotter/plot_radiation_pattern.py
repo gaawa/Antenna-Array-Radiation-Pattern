@@ -117,6 +117,6 @@ def plot3d(arrayPattern, poleAngles, azimuthAngles, logMode=True, logRange = 40,
     ax.set_ylim([-Rmax, Rmax])
     ax.set_zlim([-Rmax, Rmax])
     
-    fig.colorbar(m, shrink=0.8)
+    fig.colorbar(mappable=m, ax=ax, shrink=0.8)
     ax.view_init(azim=300, elev=30)
     plt.show()
