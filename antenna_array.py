@@ -96,7 +96,7 @@ class CircularArray(AntennaArray):
     Class that creates and stores attributes of a circular array formation
     """
     def __init__(self, antennaPattern, wavelength, elementDisctanceFactor=0.5, 
-                 numElements=10, circularAng=2*np.pi, 
+                 numElements=10, circularAng=None, 
                  elementPoleAng=np.pi/2, circularAzimuthOffset=0):
         """
         Create circular array.
@@ -114,6 +114,11 @@ class CircularArray(AntennaArray):
         numElements : integer, optional
             number of elements for the circular array. The default is 10.
         circularAng : floating point, optional
+            Angle of the arc along which the antenna elements are distributed.
+            An antenna is placed at both ends of the arc.
+            Warning: this means that when angle is 2*pi, 2 antennas will be placed at 0° angle!
+            If None, the antenna elements are correctly distributed over the full circle.
+            The default is None.
         elementPoleAng : floating point, optional
             Pole angle orientation of the antenna elements. 
             The default is np.pi/2 (pointing outwards).
@@ -130,10 +135,14 @@ class CircularArray(AntennaArray):
         self.wavelength = wavelength
         self.elementDistance = wavelength*elementDisctanceFactor
         self.numElements = numElements
-        self.circularAng = circularAng
+
+        if circularAng is None:
+            self.circularAng = 2*np.pi/self.numElements*(self.numElements-1)
+        else:
+            self.circularAng = circularAng
         self.elementRadius = get_radius_of_equal_distance(self.elementDistance, 
                                                           numElements,
-                                                          ang=circularAng)
+                                                          ang=self.circularAng)
         self.elementPoleAng = elementPoleAng
         self.circularAzimuthOffset = circularAzimuthOffset
         
@@ -146,7 +155,7 @@ class CircularArray(AntennaArray):
 
 
     def generateArray(self):
-        angularDistance = 2*np.pi/self.numElements
+        angularDistance = self.circularAng/(self.numElements-1)
     
         arrayElements = []
         for n in range(self.numElements):
@@ -167,7 +176,7 @@ class LinearCircularArray(AntennaArray):
     def __init__(self, antennaPattern, wavelength,
                  linearDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numLinearElements=4, numCircularElements=10,
-                 circularAng=2*np.pi):
+                 circularAng=None):
         """
         Create cylindrical array.
         The cylindrical array consists of multiple linear arrays arranged in a circle.
@@ -191,6 +200,11 @@ class LinearCircularArray(AntennaArray):
         numCircularElements : TYPE, optional
             number of elements for the circular array. The default is 10.
         circularAng : floating point, optional
+            Angle of the arc along which the linear arrays are distributed.
+            An linear array is placed at both ends of the arc.
+            Warning: this means that when angle is 2*pi, 2 arrays will be placed at 0° angle!
+            If None, the antenna arrays are correctly distributed over the full circle.
+            The default is None.
 
         Returns
         -------
@@ -203,10 +217,14 @@ class LinearCircularArray(AntennaArray):
         self.circularElementDistance = wavelength*circularDistanceFactor
         self.numLinearElements = numLinearElements
         self.numCircularElements = numCircularElements
-        self.circularAng = circularAng
+
+        if circularAng is None:
+            self.circularAng = 2*np.pi/numCircularElements*(numCircularElements-1)
+        else:
+            self.circularAng = circularAng
         self.circularRadius = get_radius_of_equal_distance(self.circularElementDistance, 
                                                            self.numCircularElements,
-                                                           ang=circularAng)
+                                                           ang=self.circularAng)
         
         ax_size = 1.2 * max(self.numLinearElements*self.linearElementDistance,
                             2*self.circularRadius)
@@ -218,7 +236,7 @@ class LinearCircularArray(AntennaArray):
         super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
-        angularDistance = 2*np.pi/self.numCircularElements
+        angularDistance = self.circularAng/(self.numCircularElements-1)
         linearElementPositions = self.linearElementDistance*np.array(range(self.numLinearElements))
         linearArrayLength = np.max(linearElementPositions)
         linearElementCenteredPositions = linearElementPositions - linearArrayLength/2
@@ -245,7 +263,7 @@ class BowCircularArray(AntennaArray):
     def __init__(self, antennaPattern, wavelength,
                  bowDistanceFactor=0.5, circularDistanceFactor=0.5,
                  numBowElements=4, numCircularElements=10,
-                 bowAng=np.pi/2, circularAng=2*np.pi):
+                 bowAng=np.pi/2, circularAng=None):
         """
         Create bow-circular array.
         Bow-circular array consists of multiple bow arrays (antennas placed along
@@ -270,10 +288,16 @@ class BowCircularArray(AntennaArray):
         numCircularElements : integer, optional
             number of elements for the circular array. The default is 10.
         circularAng : floating point, optional
+            Angle of the arc along which the bow arrays are distributed.
+            A bow array is placed at both ends of the arc.
+            Warning: this means that when angle is 2*pi, 2 arrays will be placed at 0° angle!
+            If None, the antenna arrays are correctly distributed over the full circle.
+            The default is None.
         bowAng : TYPE, optional
-            Angle of the bow arc. The default is np.pi/2 (quarter circle).
-        circularAng : TYPE, optional
-            Angle of the circle arc. The default is 2*np.pi (whole circle).
+            Angle of the bow arc along which the antenna elements are distributed.
+            An antenna element is placed at both ends of the arc.
+            If None, the antenna elements are distributed over the full circle without overlap.
+            The default is np.pi/2 (quarter circle).
 
         Returns
         -------
@@ -286,11 +310,22 @@ class BowCircularArray(AntennaArray):
         self.circularElementDistance = wavelength*circularDistanceFactor
         self.numBowElements = numBowElements
         self.numCircularElements = numCircularElements
+
+        if bowAng is None:
+            self.bowAng = 2*np.pi/numBowElements*(numBowElements-1)
+        else:
+            self.bowAng = bowAng
+
         self.bowAng = bowAng
         self.bowRadius = get_radius_of_equal_distance(self.bowElementDistance, 
                                                       numBowElements,
                                                       ang=self.bowAng)
-        self.circularAng = circularAng
+
+        if circularAng is None:
+            self.circularAng = 2*np.pi/numCircularElements*(numCircularElements-1)
+        else:
+            self.circularAng = circularAng
+
         if numCircularElements == 1:
             self.circularRadius = 0.1
         else:
@@ -308,7 +343,7 @@ class BowCircularArray(AntennaArray):
         super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
-        circAngularDistance = self.circularAng/self.numCircularElements
+        circAngularDistance = self.circularAng/(self.numCircularElements-1)
     
         # generate positions of a arm of bow
         numBowAngSlices = self.numBowElements-1
