@@ -35,7 +35,7 @@ class AntennaPattern(ABC):
             For multiple vectors, the dimension shall be 2xN.
             These vectors are unit vectors in spherical coordinate system where
             the basis vectors are defined by 'self.thetaOrientationVector' and
-            'self.phiOrientationVector'.
+            'self.phiOrientationVector' (in AntennaElement object).
 
         Returns
         -------
