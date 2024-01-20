@@ -82,7 +82,7 @@ class LinearArray(AntennaArray):
         arrayElements = []
         
         # thetaOrientVec = utils.spherical_to_cartesian(1, np.pi/4, np.pi/4)
-        thetaOrientVec = np.array([0, 0, 1])
+        thetaOrientVec = np.array([0, 1, 0])
         phiOrientVec = np.array([1, 0, 0])
         for n in range(self.numElements):
             xPos = (self.elementDistance*n)+self.xOffset
