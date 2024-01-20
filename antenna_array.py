@@ -48,7 +48,7 @@ class LinearArray(AntennaArray):
             
         wavelength : floating point
             lambda of the system.
-        elementDistanceFactor : floating poing, optional
+        elementDistanceFactor : floating point, optional
             Defines the distance of the antenna element.
             elementDistance = wavelength*elementDistanceFactor.
             The default is 0.5.
@@ -113,12 +113,11 @@ class CircularArray(AntennaArray):
             The default is 0.5.
         numElements : integer, optional
             number of elements for the circular array. The default is 10.
-        circularAng : floating poing, optional
-            Angle of the arc. The default is 2*np.pi (whole circle).
-        elementPoleAng : floating poing, optional
+        circularAng : floating point, optional
+        elementPoleAng : floating point, optional
             Pole angle orientation of the antenna elements. 
             The default is np.pi/2 (pointing outwards).
-        circularAzimuthOffset : floating poing, optional
+        circularAzimuthOffset : floating point, optional
             Azimuth angle offset where the first antenna element shall be positioned. 
             The default is 0.
 
@@ -177,7 +176,7 @@ class LinearCircularArray(AntennaArray):
         ----------
         antennaPattern : AntennaPattern
             Object that defines the antenna radiation pattern of the antenna element used in this array.
-        wavelength : floating poing
+        wavelength : floating point
             lambda of the system.
         linearDistanceFactor : floating point, optional
             Defines the distance of the linear array antenna element.
@@ -191,8 +190,7 @@ class LinearCircularArray(AntennaArray):
             number of elements for the linear array. The default is 10.
         numCircularElements : TYPE, optional
             number of elements for the circular array. The default is 10.
-        circularAng : TYPE, optional
-            Angle of the circle arc. The default is 2*np.pi (whole circle).
+        circularAng : floating point, optional
 
         Returns
         -------
@@ -271,6 +269,7 @@ class BowCircularArray(AntennaArray):
             number of elements for the bow array. The default is 10.
         numCircularElements : integer, optional
             number of elements for the circular array. The default is 10.
+        circularAng : floating point, optional
         bowAng : TYPE, optional
             Angle of the bow arc. The default is np.pi/2 (quarter circle).
         circularAng : TYPE, optional
