@@ -24,6 +24,11 @@ def plot_dots(antennaArray):
         yPos = antennaElement.positionVector[1]
         zPos = antennaElement.positionVector[2]
         ax.scatter(xPos, yPos, zPos, marker='o', color='b')
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
     plt.show()
     
 def plot_quiver(antennaArray, ax_size=0.5, arrow_size=1, scale_arrow=1):
