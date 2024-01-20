@@ -125,9 +125,9 @@ def array_processing(antennaArray, wavenumber, w,
         How many angle steps the pole angle has for plotting.
     azimuthResolution : integer
         How man angle steps the azimuth angle has for plotting.
-    plotThetaRange : floating poing
+    plotThetaRange : floating point
         The angle range of the pole angle for plotting.
-    plotPhiRange : floating poing
+    plotPhiRange : floating point
         The angle range of the azimuth angle for plotting.
     plotMode : enumerations.PlotMode
         Plotting mode for radiation pattern plot.
