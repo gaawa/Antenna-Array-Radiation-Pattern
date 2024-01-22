@@ -18,7 +18,10 @@ class CsvFilePattern(AntennaPattern):
         self.thetaCsvAxisUnique = np.unique(np.asarray(self.radiationPatternValues["Theta[deg]"]))*np.pi/180
         self.phiCsvAxis = np.asarray(self.radiationPatternValues["Phi[deg]"])*np.pi/180
         self.phiCsvAxisUnique = np.unique(np.asarray(self.radiationPatternValues["Phi[deg]"]))*np.pi/180
-        self.gain = np.asarray(self.radiationPatternValues["GainTotal"])
+        try:
+            self.gain = np.asarray(self.radiationPatternValues["GainTotal"])
+        except KeyError:
+            self.gain = 10**(np.asarray(self.radiationPatternValues["dB(GainTotal)"])/10)
         # Reshape gain array to matrix form
         # axis 0: phi axis
         # axis 1: theta axis
