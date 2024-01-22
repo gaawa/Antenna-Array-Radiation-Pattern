@@ -45,7 +45,7 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
         line, = ax.plot(azimuthAngles/(2*np.pi)*360, np.squeeze(arrayPatternLog))
         line.set_label(legendList[iArr])
 
-    ax.set_ylim((-50, 30))
+    ax.set_ylim((-40, 40))
     ax.grid(True)
     ax.legend()
     ax.set_title('2 Antennas at different orientation angle')
@@ -58,9 +58,21 @@ if __name__ == "__main__":
 
     antennaArrayList = []
     legendList = []
+    
+    # 4 antennas linear array
+    # antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('linear array')
 
-    # 4 antennas
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=4, circularAng=3*np.pi/4, circularAzimuthOffset=np.pi/8)
+    # 4 antennas 1/2 pi arc
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=4, circularAng=2*np.pi/4, circularAzimuthOffset=np.pi/4)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('1/2 pi arc')
+
+    # 4 antennas 3/4 pi arc
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=4, circularAng=3*np.pi/4, circularAzimuthOffset=np.pi/8)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('3/4 pi arc')
 
     # 2 antennas 0°
     antennaArray = LinearArray(antennaPattern, wavelength, numElements=2)
@@ -68,18 +80,24 @@ if __name__ == "__main__":
     legendList.append('0°')
 
     # 2 antennas 30°
-    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/12, circularAzimuthOffset=np.pi/2-np.pi/12)
-    # antennaArrayList.append(antennaArray)
+    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/12, circularAzimuthOffset=np.pi/2-np.pi/12)
+    antennaArrayList.append(antennaArray)
+    legendList.append('30°')
 
     # 2 anennas 45°
     antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/8, circularAzimuthOffset=np.pi/2-np.pi/8)
     antennaArrayList.append(antennaArray)
     legendList.append('45°')
 
-    # 2 antennas 90°
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/4, circularAzimuthOffset=np.pi/2-np.pi/4)
+    # 2 antennas 60°
+    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/6, circularAzimuthOffset=np.pi/2-np.pi/6)
     antennaArrayList.append(antennaArray)
-    legendList.append('90°')
+    legendList.append('60°')
+
+    # 2 antennas 90°
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/4, circularAzimuthOffset=np.pi/2-np.pi/4)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('90°')
 
     # Linear test
     # antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
