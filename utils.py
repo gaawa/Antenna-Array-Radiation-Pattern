@@ -6,7 +6,7 @@ Created on Tue Dec 20 12:32:41 2022
 """
 import numpy as np
 
-def get_radius_of_equal_distance(d, Npts, ang=2*np.pi):
+def get_radius_of_equal_distance(d, nPts, ang=None):
     """
     Create the radius of the circle curve along which, "Npts" points are 
     equally distributed with distance "d" to the neighboring point where the 
@@ -16,10 +16,14 @@ def get_radius_of_equal_distance(d, Npts, ang=2*np.pi):
     ----------
     distance : floating point
         distance between two points.
-    Npts : integer
+    nPts : integer
         number of points on the curve.
     ang : floating point, optional
-        arc angle of the curve. The default is 2*np.pi (full circle).
+        Angle of the arc along which the points are distributed.
+        A point is placed at both ends of the arc.
+        Warning: this means that when angle is 2*pi, 2 points will be placed at 0° angle!
+        If None, the points are correctly distributed over the full circle.
+        The default is None.
 
     Returns
     -------
@@ -27,14 +31,18 @@ def get_radius_of_equal_distance(d, Npts, ang=2*np.pi):
         radius.
 
     """
-    fullCircleAng = 2*np.pi
-
-    if ang == fullCircleAng:
-        NptsSubtractor = 0
+    
+    if ang is None:
+        nPtsSubtractor = 0
     else:
-        NptsSubtractor = 1
+        nPtsSubtractor = 1
 
-    r = d/(2*np.sin( ang/(2*(Npts-NptsSubtractor)) ))
+    if nPts == 1:
+        # set radius to fixed size when there is only one point
+        r = 0.1
+    else:
+        r = d/(2*np.sin( ang/(2*(nPts-nPtsSubtractor)) ))
+
     return r
     
 def cartesian_to_spherical(x, y, z):

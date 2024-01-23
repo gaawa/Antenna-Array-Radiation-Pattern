@@ -155,7 +155,10 @@ class CircularArray(AntennaArray):
 
 
     def generateArray(self):
-        angularDistance = self.circularAng/(self.numElements-1)
+        if self.numElements == 1:
+            angularDistance = 0
+        else:
+            angularDistance = self.circularAng/(self.numElements-1)
     
         arrayElements = []
         for n in range(self.numElements):
@@ -236,7 +239,10 @@ class LinearCircularArray(AntennaArray):
         super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
-        angularDistance = self.circularAng/(self.numCircularElements-1)
+        if self.numCircularElements == 1:
+            angularDistance = 0
+        else:
+            angularDistance = self.circularAng/(self.numCircularElements-1)
         linearElementPositions = self.linearElementDistance*np.array(range(self.numLinearElements))
         linearArrayLength = np.max(linearElementPositions)
         linearElementCenteredPositions = linearElementPositions - linearArrayLength/2
@@ -343,11 +349,16 @@ class BowCircularArray(AntennaArray):
         super().__init__(arrayElements, ax_size, arrow_size)
         
     def generateArray(self):
-        circAngularDistance = self.circularAng/(self.numCircularElements-1)
+        if self.numCircularElements == 1:
+            circAngularDistance = 0
+        else:
+            circAngularDistance = self.circularAng/(self.numCircularElements-1)
     
         # generate positions of a arm of bow
-        numBowAngSlices = self.numBowElements-1
-        bowAngularDistance = self.bowAng/numBowAngSlices  # angle between bow elements
+        if self.numBowElements == 1:
+            bowAngularDistance = 0
+        else:
+            bowAngularDistance = self.bowAng/(self.numBowElements-1)  # angle between bow elements
         bowElementElevations = -self.bowAng/2 + np.array(range(self.numBowElements))*bowAngularDistance
         xPosVec = self.bowRadius * np.cos(bowElementElevations) + (self.circularRadius - self.bowRadius)
         zPosVec = self.bowRadius * np.sin(bowElementElevations)
