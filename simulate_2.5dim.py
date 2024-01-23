@@ -19,6 +19,7 @@ wavelength = spc.speed_of_light/freq
 wavenumber = 2*np.pi/wavelength
 nSteps = 100
 nAngResolution = 200
+projection = 'polar'
 
 def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
     ax.clear()
@@ -28,10 +29,11 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
     
     for iArr, antennaArray in enumerate(antennaArrayList):
         # calculate beamforming weighting factors
-        # w = projection_beamformer(antennaArray, bfTheta, bfPhi, wavenumber)
+        w = projection_beamformer(antennaArray, bfTheta, bfPhi, wavenumber)
+        # w = w * np.array([[1],[0]])
 
-        w = synthesis_beamformer(antennaArray, [(10, bfTheta, bfPhi)], wavenumber)
-        w = len(antennaArray.arrayElements)*w/np.linalg.norm(w)
+        # w = synthesis_beamformer(antennaArray, [(10, bfTheta, bfPhi)], wavenumber)
+        # w = len(antennaArray.arrayElements)*w/np.linalg.norm(w)
         # azimuth angle steps for simulation
         azimuthAngles = np.arange(0, 2*np.pi, 2*np.pi/nAngResolution)
         
@@ -42,22 +44,37 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
         
         patternSqueezed = np.squeeze(pattern)
         arrayPatternLog = 10*np.log10(np.abs((patternSqueezed))**2)
-        line, = ax.plot(azimuthAngles/(2*np.pi)*360, np.squeeze(arrayPatternLog))
+        if projection == 'linear':
+            angAx = np.rad2deg(azimuthAngles)
+        else:
+            angAx = azimuthAngles
+        line, = ax.plot(angAx, np.squeeze(arrayPatternLog))
         line.set_label(legendList[iArr])
 
     ax.set_ylim((-40, 40))
     ax.grid(True)
     ax.legend()
     ax.set_title('2 Antennas at different orientation angle')
-    ax.axvline(x=bfPhi/(2*np.pi)*360, color='r', label='steering angle')
+    # ax.set_title('2 omnidirectional antennas')
+    ax.set_title('2 Antennas at 135°')
+    if projection == 'linear':
+        xLinePos = np.rad2deg(bfPhi)
+    else:
+        xLinePos = bfPhi
+    ax.axvline(x=xLinePos, color='r', label='steering angle')
  
 if __name__ == "__main__":
     # array setup
-    antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
+    antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation_johann.csv', debug=False, fastMode=True)
     # antennaPattern = OmnidirectionalAntennaPattern()
 
     antennaArrayList = []
     legendList = []
+    
+    # 1 antenna test 
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=1, circularAzimuthOffset=2*3/4*np.pi)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('0°')
     
     # 4 antennas linear array
     # antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
@@ -75,29 +92,34 @@ if __name__ == "__main__":
     # legendList.append('3/4 pi arc')
 
     # 2 antennas 0°
-    antennaArray = LinearArray(antennaPattern, wavelength, numElements=2)
-    antennaArrayList.append(antennaArray)
-    legendList.append('0°')
+    # antennaArray = LinearArray(antennaPattern, wavelength, numElements=2)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('0°')
 
     # 2 antennas 30°
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/12, circularAzimuthOffset=np.pi/2-np.pi/12)
-    antennaArrayList.append(antennaArray)
-    legendList.append('30°')
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/12, circularAzimuthOffset=np.pi/2-np.pi/12)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('30°')
 
     # 2 anennas 45°
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/8, circularAzimuthOffset=np.pi/2-np.pi/8)
-    antennaArrayList.append(antennaArray)
-    legendList.append('45°')
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/8, circularAzimuthOffset=np.pi/2-np.pi/8)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('45°')
 
     # 2 antennas 60°
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/6, circularAzimuthOffset=np.pi/2-np.pi/6)
-    antennaArrayList.append(antennaArray)
-    legendList.append('60°')
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/6, circularAzimuthOffset=np.pi/2-np.pi/6)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('60°')
 
     # 2 antennas 90°
     # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/4, circularAzimuthOffset=np.pi/2-np.pi/4)
     # antennaArrayList.append(antennaArray)
     # legendList.append('90°')
+
+    # 2 antennas 130°
+    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi*3/8, circularAzimuthOffset=np.pi/2-np.pi*3/8)
+    antennaArrayList.append(antennaArray)
+    legendList.append('90°')
 
     # Linear test
     # antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
@@ -113,8 +135,8 @@ if __name__ == "__main__":
                                      arrow_size=antennaArray.arrow_size,
                                      scale_arrow = 1)
     
-    fig = plt.figure()
-    ax = fig.add_subplot()
+    fig = plt.figure(figsize=[10, 10])
+    ax = fig.add_subplot(projection=projection)
 
     ani = FuncAnimation(fig,
                         partial(animate, 
@@ -129,4 +151,4 @@ if __name__ == "__main__":
     writer = PillowWriter(fps=15,
                           metadata=dict(artist='Me'),
                           bitrate=1800)
-    ani.save('dual_antenna.gif', writer=writer)
+    ani.save('dual_antenna_johan_135_polar.gif', writer=writer)
