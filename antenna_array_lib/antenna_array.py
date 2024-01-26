@@ -1,8 +1,8 @@
 import numpy as np
-import utils
-from utils import get_radius_of_equal_distance, spherical_to_cartesian
+import antenna_array_lib.utils as utils
+from antenna_array_lib.utils import get_radius_of_equal_distance, spherical_to_cartesian
 from abc import ABC
-from antenna_element import AntennaElement
+from antenna_array_lib.antenna_element import AntennaElement
 
 
 class AntennaArray(ABC):

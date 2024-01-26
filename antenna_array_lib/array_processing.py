@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from enumerations import PlotMode, BeamFormer
+from antenna_array_lib.enumerations import PlotMode, BeamFormer
 import numpy as np
-from plotter import plot_radiation_pattern
-from plotter import plot_antenna_topology
-from utils import spherical_to_cartesian
+from antenna_array_lib.plotter import plot_radiation_pattern
+from antenna_array_lib.plotter import plot_antenna_topology
+from antenna_array_lib.utils import spherical_to_cartesian
 
 def plot2d_generic(z_mat, x_vec, y_vec):
     """

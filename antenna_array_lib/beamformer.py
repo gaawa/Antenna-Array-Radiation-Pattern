@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils import spherical_to_cartesian
+from antenna_array_lib.utils import spherical_to_cartesian
 import numpy as np
 
 def no_beamformer(antennaArray):

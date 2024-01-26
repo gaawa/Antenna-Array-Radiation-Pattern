@@ -1,7 +1,7 @@
-from antenna_pattern.antenna_pattern_abs import AntennaPattern
+from .antenna_pattern_abs import AntennaPattern
 import numpy as np
 import pandas
-import utils
+import antenna_array_lib.utils as utils
 
 import matplotlib.pyplot as plt
 

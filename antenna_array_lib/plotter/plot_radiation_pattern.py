@@ -5,7 +5,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-import utils
+import antenna_array_lib.utils as utils
 
 def plot2d(arrayPattern, poleAngles, azimuthAngles):
     """

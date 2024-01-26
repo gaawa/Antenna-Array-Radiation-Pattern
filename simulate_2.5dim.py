@@ -3,14 +3,14 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 from functools import partial
 import numpy as np
 import scipy.constants as spc
-from antenna_pattern.circledirectional import CircledirectionalAntennaPattern
-from antenna_pattern.omnidirectional import OmnidirectionalAntennaPattern
-from antenna_pattern.csv_file_pattern import CsvFilePattern
-from beamformer import no_beamformer, projection_beamformer, partial_projection_beamformer
-from beamformer import synthesis_beamformer, synthesis_canceller_beamformer
-from antenna_array import CircularArray, LinearArray
-import array_processing
-from plotter import plot_antenna_topology
+from antenna_array_lib.antenna_pattern.circledirectional import CircledirectionalAntennaPattern
+from antenna_array_lib.antenna_pattern.omnidirectional import OmnidirectionalAntennaPattern
+from antenna_array_lib.antenna_pattern.csv_file_pattern import CsvFilePattern
+from antenna_array_lib.beamformer import no_beamformer, projection_beamformer, partial_projection_beamformer
+from antenna_array_lib.beamformer import synthesis_beamformer, synthesis_canceller_beamformer
+from antenna_array_lib.antenna_array import CircularArray, LinearArray
+from antenna_array_lib import array_processing
+from antenna_array_lib.plotter import plot_antenna_topology
 
 # global variables
 
@@ -67,8 +67,8 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
  
 if __name__ == "__main__":
     # array setup
-    antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation_johann.csv', debug=False, fastMode=True)
-    # antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
+    antennaPattern = CsvFilePattern('Gain_lin_simulation_johann.csv', debug=False, fastMode=True)
+    # antennaPattern = CsvFilePattern('Gain_lin_simulation.csv', debug=False, fastMode=True)
     # antennaPattern = OmnidirectionalAntennaPattern()
 
     antennaArrayList = []

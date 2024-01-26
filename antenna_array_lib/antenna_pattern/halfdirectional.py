@@ -1,4 +1,4 @@
-from antenna_pattern.antenna_pattern_abs import AntennaPattern
+from .antenna_pattern_abs import AntennaPattern
 import numpy as np
 
 class HalfdirectionalAntennaPattern(AntennaPattern):
