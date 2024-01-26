@@ -25,19 +25,22 @@ wavenumber = 2*np.pi/wavelength
 # antennaPattern = HalfdirectionalAntennaPattern()
 # antennaPattern = OmnidirectionalAntennaPattern()
 antennaPattern = CircledirectionalAntennaPattern()
+antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation_johann.csv', debug=False, fastMode=True)
 # antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
+antennaPattern = CsvFilePattern('antenna_pattern/Thermocomp_0-45.csv', debug=False, fastMode=True)
+
 
 ## spawn antenna elements with specified array topology
 # Single antenna element for testing
-# antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDistanceFactor=0.5)
+antennaArray = LinearArray(antennaPattern, wavelength, numElements=1, elementDistanceFactor=0.5)
 # Linear array with 8 elements
-antennaArray = LinearArray(antennaPattern, wavelength, numElements=8, elementDistanceFactor=0.5)
+# antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
 # Circular array
-antennaArray = CircularArray(antennaPattern, wavelength)
+# antennaArray = CircularArray(antennaPattern, wavelength, numElements=4, circularAng=np.pi, circularAzimuthOffset=np.pi/8)
 # Zylindrical conformal array
-antennaArray = LinearCircularArray(antennaPattern, wavelength) 
+# antennaArray = LinearCircularArray(antennaPattern, wavelength) 
 # Spherical conformal array
-antennaArray = BowCircularArray(antennaPattern, wavelength)
+# antennaArray = BowCircularArray(antennaPattern, wavelength)
 
 ## set desired beamforming direction
 beamformerTheta = np.pi/4

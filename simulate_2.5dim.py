@@ -18,8 +18,9 @@ freq = 3e9
 wavelength = spc.speed_of_light/freq
 wavenumber = 2*np.pi/wavelength
 nSteps = 100
+nAngResolution = 360
 nAngResolution = 200
-projection = 'polar'
+projection = 'rectilinear'
 
 def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
     ax.clear()
@@ -29,11 +30,11 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
     
     for iArr, antennaArray in enumerate(antennaArrayList):
         # calculate beamforming weighting factors
-        w = projection_beamformer(antennaArray, bfTheta, bfPhi, wavenumber)
+        # w = projection_beamformer(antennaArray, bfTheta, bfPhi, wavenumber)
         # w = w * np.array([[1],[0]])
 
-        # w = synthesis_beamformer(antennaArray, [(10, bfTheta, bfPhi)], wavenumber)
-        # w = len(antennaArray.arrayElements)*w/np.linalg.norm(w)
+        w = synthesis_beamformer(antennaArray, [(10, bfTheta, bfPhi)], wavenumber)
+        w = len(antennaArray.arrayElements)*w/np.linalg.norm(w)
         # azimuth angle steps for simulation
         azimuthAngles = np.arange(0, 2*np.pi, 2*np.pi/nAngResolution)
         
@@ -44,11 +45,11 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
         
         patternSqueezed = np.squeeze(pattern)
         arrayPatternLog = 10*np.log10(np.abs((patternSqueezed))**2)
-        if projection == 'linear':
+        if projection == 'rectilinear':
             angAx = np.rad2deg(azimuthAngles)
         else:
             angAx = azimuthAngles
-        line, = ax.plot(angAx, np.squeeze(arrayPatternLog))
+        line, = ax.plot(angAx, np.squeeze(arrayPatternLog), 'x')
         line.set_label(legendList[iArr])
 
     ax.set_ylim((-40, 40))
@@ -57,7 +58,8 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
     ax.set_title('2 Antennas at different orientation angle')
     # ax.set_title('2 omnidirectional antennas')
     ax.set_title('2 Antennas at 135°')
-    if projection == 'linear':
+    ax.set_title('4 Antennas at different orientation angle')
+    if projection == 'rectilinear':
         xLinePos = np.rad2deg(bfPhi)
     else:
         xLinePos = bfPhi
@@ -66,13 +68,14 @@ def animate(i, ax, bfThetas, bfPhis, antennaArrayList, legendList):
 if __name__ == "__main__":
     # array setup
     antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation_johann.csv', debug=False, fastMode=True)
+    # antennaPattern = CsvFilePattern('antenna_pattern/Gain_lin_simulation.csv', debug=False, fastMode=True)
     # antennaPattern = OmnidirectionalAntennaPattern()
 
     antennaArrayList = []
     legendList = []
     
     # 1 antenna test 
-    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=1, circularAzimuthOffset=2*3/4*np.pi)
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAzimuthOffset=2*3/4*np.pi)
     # antennaArrayList.append(antennaArray)
     # legendList.append('0°')
     
@@ -92,9 +95,9 @@ if __name__ == "__main__":
     # legendList.append('3/4 pi arc')
 
     # 2 antennas 0°
-    # antennaArray = LinearArray(antennaPattern, wavelength, numElements=2)
-    # antennaArrayList.append(antennaArray)
-    # legendList.append('0°')
+    antennaArray = LinearArray(antennaPattern, wavelength, numElements=2)
+    antennaArrayList.append(antennaArray)
+    legendList.append('0°')
 
     # 2 antennas 30°
     # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/12, circularAzimuthOffset=np.pi/2-np.pi/12)
@@ -117,14 +120,19 @@ if __name__ == "__main__":
     # legendList.append('90°')
 
     # 2 antennas 130°
-    antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi*3/8, circularAzimuthOffset=np.pi/2-np.pi*3/8)
-    antennaArrayList.append(antennaArray)
-    legendList.append('90°')
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi*3/8, circularAzimuthOffset=np.pi/2-np.pi*3/8)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('135°')
+    
+    # 2 antennas 180°
+    # antennaArray = CircularArray(antennaPattern, wavelength, numElements=2, circularAng=2*np.pi/2, circularAzimuthOffset=np.pi/2-np.pi/2)
+    # antennaArrayList.append(antennaArray)
+    # legendList.append('180°')
 
     # Linear test
     # antennaArray = LinearArray(antennaPattern, wavelength, numElements=4, elementDistanceFactor=0.5)
     # antennaArray = CircularArray(antennaPattern, wavelength, numElements=4, circularAng=0.001, circularAzimuthOffset=np.pi/2-0.0005)
-    
+
     bfThetas = np.zeros(nSteps)
     bfThetas = np.full(nSteps, np.pi/2)
     bfPhis = np.arange(0, 2*np.pi, 2*np.pi/nSteps)
@@ -147,8 +155,8 @@ if __name__ == "__main__":
                         frames=nSteps,
                         repeat=True)
     
-    # plt.show()
-    writer = PillowWriter(fps=15,
-                          metadata=dict(artist='Me'),
-                          bitrate=1800)
-    ani.save('dual_antenna_johan_135_polar.gif', writer=writer)
+    plt.show()
+    # writer = PillowWriter(fps=15,
+    #                       metadata=dict(artist='Me'),
+    #                       bitrate=1800)
+    # ani.save('quad_antenna_johan_synthesis_polar.gif', writer=writer)
