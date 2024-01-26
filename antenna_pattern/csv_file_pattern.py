@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 class CsvFilePattern(AntennaPattern):
     """
     Reads antenna radiation pattern from a file. Values are converted to linear scale for output
+
+    TODO: angle offset parameter to align the pattern
+    TODO: interpolate inbetween angles
     """
     def __init__(self, filePath, debug=False, fastMode=True):
         super().__init__()
