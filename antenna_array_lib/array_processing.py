@@ -65,7 +65,7 @@ def calculate_radiation_pattern(antennaArray, w, poleAngles, azimuthAngles, wave
     poleResolution = poleAngles.size
     azimuthResolution = azimuthAngles.size
 
-    arrayPattern = np.zeros((poleResolution, azimuthResolution), dtype=np.complex_)
+    arrayPattern = np.zeros((poleResolution, azimuthResolution), dtype=np.complex128)
 
     # create cartesian direction vectors as a function of 
     # spherical coordinate parameters
